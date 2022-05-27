@@ -130,8 +130,8 @@ def run(file_name, original_text):
         ber = 0
 
     # pretty output
-    print(file_name, (27 - len(file_name))*' ',"|\t", round(ber,7))
-    print('------------------------------------------------')
+    print(file_name, (35 - len(file_name))*' ',"|\t", round(ber,7))
+    print('-----------------------------------------------------')
 
 # run main method
 if __name__ == '__main__':
