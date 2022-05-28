@@ -1,3 +1,6 @@
+## import dependencies
+from statistics import mean, stdev
+
 ## main method
 # Objectives:
 # - transcribe master file
@@ -7,34 +10,26 @@ def main():
     original_text = list()
 
     # file array: UART - UART direct connection control environment files
-    test_files_control_speed = ['9600_control.txt', '19200_control.txt',
-                                '38400_control.txt', '57600_control.txt',
-                                '115200_control.txt', '230400_control.txt',
-                                '460800_control.txt']
+    # control = ['9600_control.txt', '19200_control.txt',
+    #                             '38400_control.txt', '57600_control.txt',
+    #                             '115200_control.txt', '230400_control.txt',
+    #                             '460800_control.txt']
 
-    # file array: vary UART rate to Li-Fi, well-lit environment
-    test_files_light_speed = ['light_speed_9600.txt', 'light_speed_19200.txt',
-                            'light_speed_38400.txt', 'light_speed_57600.txt',
-                            'light_speed_115200.txt', 'light_speed_230400.txt',
-                            'light_speed_460800.txt']
+    # dir array: vary UART rate to Li-Fi, well-lit environment
+    dark_distance = ['dark_11.25', 'dark_15', 'dark_18.75',
+                    'dark_22.5', 'dark_7.5']
 
-    # file array: vary UART rate to Li-Fi, poorly-lit environment
-    test_files_dark_speed = ['dark_speed_9600.txt', 'dark_speed_19200.txt',
-                            'dark_speed_38400.txt', 'dark_speed_57600.txt',
-                            'dark_speed_115200.txt', 'dark_speed_230400.txt',
-                            'dark_speed_460800.txt']
+    # dir array: vary UART rate to Li-Fi, poorly-lit environment
+    light_distance = ['light_11.25', 'light_15', 'light_18.75',
+                    'light_22.5', 'light_7.5']
 
-    # file array: vary LED - Photodiode distance, well-lit environment
-    test_files_light_distance = ['light_distance_10cm.txt', 'light_distance_12cm.txt',
-                            'light_distance_15cm.txt', 'light_distance_17.5cm.txt',
-                            'light_distance_19.5cm.txt', 'light_distance_23cm.txt',
-                            'light_distance_30cm.txt']
+    # dir array: vary LED - Photodiode distance, well-lit environment
+    dark_speed = ['dark_115200', 'dark_19200', 'dark_230400',
+                'dark_38400', 'dark_460800', 'dark_57600', 'dark_9600']
 
-    # file array: vary LED - Photodiode distance, poorly-lit environment
-    test_files_dark_distance = ['dark_distance_10cm.txt', 'dark_distance_12cm.txt',
-                            'dark_distance_15cm.txt', 'dark_distance_17.5cm.txt',
-                            'dark_distance_19.5cm.txt', 'dark_distance_23cm.txt',
-                            'dark_distance_30cm.txt']
+    # dir array: vary LED - Photodiode distance, poorly-lit environment
+    light_speed = ['light_115200', 'light_19200', 'light_230400',
+                'light_38400', 'light_460800', 'light_57600', 'light_9600']
 
     ## context manager: open master file for reading
     with open('master.txt','r') as masterfile:
@@ -51,28 +46,76 @@ def main():
 
         print('[INFO] Running tests ...')
         print('             BYTE ERROR RATE SUMMARY            ')
-        print('------------------------------------------------')
-
-        # run accuracy test on control environment files
-        for file in test_files_control_speed:
-            run('table1/'+file, original_text)
+        print('--------------------------------------------------------------------')
 
         # run accuracy test on varied speed, well-lit environment files
-        for file in test_files_light_speed:
-            run('table2/'+file, original_text)
+        for dir in light_distance:
+            ber_lst = list()
+            for i in range(5):
+                file = 'light_distance/' + dir + f'/reading_{i+1}.txt'
+                ber = run(file, original_text)
+                ber_lst.append(ber)
+
+                # pretty output
+                print(file, (45 - len(file))*' ',"|\t", round(ber,7))
+                print('--------------------------------------------------------------------')
+
+            # pretty output
+            print("Mean", round(mean(ber_lst),7),"\t|\t", "Std. Dev", \
+                    round(stdev(ber_lst),7))
+            print('--------------------------------------------------------------------')
+            print()
 
         # run accuracy test on varied speed, poorly-lit environment files
-        for file in test_files_dark_speed:
-            run('table3/'+file, original_text)
+        for dir in dark_speed:
+            ber_lst = list()
+            for i in range(5):
+                file = 'dark_speed/' + dir + f'/reading_{i+1}.txt'
+                ber = run(file, original_text)
+                ber_lst.append(ber)
+
+                # pretty output
+                print(file, (50 - len(file))*' ',"|\t", round(ber,7))
+                print('--------------------------------------------------------------------')
+
+            # pretty output
+            print("Mean", round(mean(ber_lst),7),"\t|\t", "Std. Dev", \
+                    round(stdev(ber_lst),7))
+            print('--------------------------------------------------------------------')
 
         # run accuracy test on varied distance, well-lit environment files
-        for file in test_files_light_distance:
-            run('table4/'+file, original_text)
+        for dir in light_speed:
+            ber_lst = list()
+            for i in range(5):
+                file = 'light_speed/' + dir + f'/reading_{i+1}.txt'
+                ber = run(file, original_text)
+                ber_lst.append(ber)
+
+                # pretty output
+                print(file, (50 - len(file))*' ',"|\t", round(ber,7))
+                print('--------------------------------------------------------------------')
+
+            # pretty output
+            print("Mean", round(mean(ber_lst),7),"\t|\t", "Std. Dev", \
+                    round(stdev(ber_lst),7))
+            print('--------------------------------------------------------------------')
 
         # run accuracy test on varied distance, poorly-lit environment files
-        for file in test_files_dark_distance:
-            run('table5/'+file, original_text)
+        for dir in dark_distance:
+            ber_lst = list()
+            for i in range(5):
+                file = 'dark_distance/' + dir + f'/reading_{i+1}.txt'
+                ber = run(file, original_text)
+                ber_lst.append(ber)
 
+                # pretty output
+                print(file, (50 - len(file))*' ',"|\t", round(ber,7))
+                print('--------------------------------------------------------------------')
+
+            # pretty output
+            print("Mean", round(mean(ber_lst),7),"\t|\t", "Std. Dev", \
+                    round(stdev(ber_lst),7))
+            print('--------------------------------------------------------------------')
 ## run method
 # Objectives:
 # - define a double match word accuracy test
@@ -115,7 +158,7 @@ def run(file_name, original_text):
                 # if a match is realised for the next word (double match)
                 if original_text[i+1] == rcv_text[j+1]:
 
-                    # if double match (phrase identifies), add bytes to match pool
+                    # if double match (phrase identifies), add bytes to match
                     match = match + len(original_text[i])
 
                     # exit loop
@@ -129,9 +172,7 @@ def run(file_name, original_text):
         print("[ERROR] Original file is empty!")
         ber = 0
 
-    # pretty output
-    print(file_name, (35 - len(file_name))*' ',"|\t", round(ber,7))
-    print('-----------------------------------------------------')
+    return ber
 
 # run main method
 if __name__ == '__main__':
