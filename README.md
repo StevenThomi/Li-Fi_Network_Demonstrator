@@ -1,4 +1,4 @@
-##Li-Fi Network Demonstrator##
+# Li-Fi Network Demonstrator
 
 This repository serves to document my Final Year Project.
 
